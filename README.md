@@ -1,178 +1,150 @@
-text
-# Sunbird AI Translation & Speech Application
+# Sunbird AI Translation App
 
-A Generative AI web application that processes text or audio through a complete pipeline of transcription, summarization, translation to Ugandan local languages, and speech synthesis - all powered by Sunbird AI's APIs.
+A web app that processes text or audio through an AI pipeline: transcription → summarization → translation to Ugandan languages → speech synthesis. Built for the Sunbird AI internship assessment.
 
-## Project Description
-
-This application demonstrates the integration of multiple AI capabilities using Sunbird AI's API. Users can input text directly or upload audio files, which are then processed through an automated pipeline that transcribes (if audio), summarizes, translates to local Ugandan languages, and generates speech output.
-
-## Features
-
-- **Dual Input Support**: Accept both text input and audio file uploads
-- **Speech-to-Text**: Transcribe uploaded audio files to text
-- **Text Summarization**: Generate concise summaries of input text
-- **Translation**: Translate summaries into 5 Ugandan languages (Luganda, Runyankole, Ateso, Lugbara, Acholi)
-- **Text-to-Speech**: Convert translated text into audio
-- **User-friendly Interface**: Clean Streamlit interface with real-time progress indicators
+🔗 **Live Demo**: https://huggingface.co/spaces/A-Deogracious/sunbird-translation-app
 
 ## Architecture Overview
 
-### Pipeline Flow
-INPUT
-├─ Text Input → Skip to Step 2
-└─ Audio Upload → Step 1: Speech-to-Text (Sunbird STT API)
+The app follows this pipeline:
+INPUT (Text or Audio)
 ↓
-Step 2: Summarization (Sunbird Summarise API)
+Speech-to-Text (if audio) → Sunbird /tasks/stt
+
 ↓
-Step 3: Translation (Sunbird Sunflower Simple API)
+Summarization → Sunbird /tasks/summarise
+
 ↓
-Step 4: Text-to-Speech (Sunbird TTS API)
+Translation → Sunbird /tasks/sunflower_simple
+
 ↓
-OUTPUT (Display all intermediate results + audio player)
+Text-to-Speech → Sunbird /tasks/tts
 
-text
+↓
+OUTPUT (Translated text + audio player)
 
-### API Endpoints Used
 
-| Step | Endpoint | Purpose |
-|------|----------|---------|
-| 1 | `/tasks/stt` | Speech-to-Text transcription |
-| 2 | `/tasks/summarise` | Text summarization |
-| 3 | `/tasks/sunflower_simple` | AI-powered translation |
-| 4 | `/tasks/tts` | Text-to-Speech synthesis |
+**API Endpoints Used:**
 
-## Tech Stack
-
-- **Frontend**: Streamlit
-- **Backend**: Python 3.x
-- **AI Provider**: Sunbird AI (all AI capabilities)
-- **Key Libraries**: 
-  - `streamlit` - Web interface
-  - `requests` - API calls
-  - `python-dotenv` - Environment variable management
-  - `base64` - Audio decoding
+| Step | Sunbird Endpoint | Purpose |
+|------|------------------|---------|
+| 1 | `/tasks/stt` | Transcribe audio to text |
+| 2 | `/tasks/summarise` | Generate summary of text |
+| 3 | `/tasks/sunflower_simple` | Translate English → Ugandan language |
+| 4 | `/tasks/tts` | Convert translated text to speech |
 
 ## Local Setup
 
-### Prerequisites
+Follow these exact steps to run the app on your machine:
 
+### Prerequisites
 - Python 3.8 or higher
 - Git
-- Sunbird AI API token (get one at [https://api.sunbird.ai/](https://api.sunbird.ai/))
+- Sunbird AI API token (sign up free at https://api.sunbird.ai/)
 
-### Installation Steps
+### Installation
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/<A-Deogracious>/internship-assessment.git
-   cd internship-assessment
-   ```
+**1. Clone the repository**
+```bash
+git clone https://github.com/A-Deogracious/internship-assessment.git
+cd internship-assessment
+```
 
-2. **Create and activate virtual environment**
-   
-   **Windows:**
-   ```powershell
-   python -m venv venv
-   venv\Scripts\activate
-   ```
-   
-   **Mac/Linux:**
-   ```bash
-   python -m venv venv
-   source venv/bin/activate
-   ```
+**2. Create and activate virtual environment**
 
-3. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
+Windows:
+```powershell
+python -m venv venv
+venv\Scripts\activate
+```
 
-4. **Set up environment variables**
-   
-   Create a `.env` file in the root directory:
-   ```bash
-   # Windows
-   New-Item .env
-   
-   # Mac/Linux
-   touch .env
-   ```
-   
-   Add your Sunbird AI API token to `.env`:
-SUNBIRD_API_TOKEN=your_api_token_here
+Mac/Linux:
+```bash
+python -m venv venv
+source venv/bin/activate
+```
+
+**3. Install dependencies**
+```bash
+pip install -r requirements.txt
+```
+
+**4. Configure environment variables**
+
+Create a `.env` file in the project root:
+```bash
+# Windows
+New-Item .env
+
+# Mac/Linux
+touch .env
+```
+
+Add your API token to `.env`:
+SUNBIRD_API_TOKEN=your_actual_token_here
 
 text
 
-See `.env.example` for reference.
+See `.env.example` for the template.
 
-5. **Run the application**
+**5. Run the application**
 ```bash
 streamlit run app.py
 ```
 
-The app will open in your default browser at `http://localhost:8501`
+The app will open automatically in your browser at http://localhost:8501
 
 ## Environment Variables
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `SUNBIRD_API_TOKEN` | Your Sunbird AI API authentication token | Yes |
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `SUNBIRD_API_TOKEN` | Yes | Your Sunbird AI API authentication token. Get it from https://api.sunbird.ai/ after creating a free account. Used to authenticate all API requests. |
 
-**Note**: Never commit your `.env` file to version control. It's already in `.gitignore`.
+**Important**: Never commit your `.env` file to version control. It's already in `.gitignore`.
 
 ## Usage
 
-### Text Input
+### Text Input Example
 
-1. Select **"Text"** as input type
-2. Enter or paste your text in the text area
-3. Select target language for translation (Luganda, Runyankole, Ateso, Lugbara, or Acholi)
-4. Click **"🚀 Process"**
-5. View results:
-- Original text
-- Summary
-- Translated summary
-- Audio player with speech output
+1. **Select input type**: Choose "Text"
+2. **Enter text**: Type or paste your content
+Example: "I Love Ugandan Food So Much."
 
-### Audio Input
+3. **Choose language**: Select target language (e.g., Luganda)
+4. **Click Process**: Hit the 🚀 Process button
 
-1. Select **"Audio"** as input type
-2. Upload a WAV or MP3 file (must be under 5 minutes)
-3. Select target language
-4. Click **"🚀 Process"**
-5. View results:
-- Transcribed text
-- Summary
-- Translated summary
-- Audio player with speech output
+**Results you'll see:**
+- **Original Text**: Your input displayed
+- **Summary**: AI-generated shorter version
+- **Translation**: Summary translated to Luganda
+- **Audio Player**: Hear the Luganda translation spoken
 
-### Example
+### Audio Input Example
 
-**Input Text:**
-Uganda is a beautiful country located in East Africa. It is known for its diverse wildlife,
-including mountain gorillas. The capital city is Kampala.
+1. **Select input type**: Choose "Audio"
+2. **Upload file**: Select a WAV or MP3 file (max 5 minutes)
+3. **Choose language**: Pick translation language
+4. **Click Process**: Start the pipeline
 
-text
+**Results:**
+- **Transcribed Text**: What was said in the audio
+- **Summary**: Shortened version
+- **Translation**: In your chosen language
+- **Audio Player**: Speech output
 
-**Summary:**
-Uganda is an East African country known for wildlife like mountain gorillas, with Kampala as its capital.
+### Screenshots
 
-text
+**Main Interface (Text Input):**
 
-**Translation (Luganda):**
-Uganda nsi nnungi mu East Africa ekimanyiddwa olw'ebisolo eby'enjawulo ng'enkima z'ensozi,
-ekibuga ekikulu kye Kampala.
+![Text input interface](images/screenshot-interface.jpg)
 
-text
+**Processing Results:**
 
-**Output:** Audio player with Luganda speech
+![Results showing summary and translation](images/screenshot-results.jpg)
 
-## Deployed Application
+**Audio Upload Interface:**
 
-**Live Demo**: [Your Hugging Face Space URL will go here]
-
-Try the application online without any local setup!
+![Audio input interface](images/screenshot-audio.jpg)
 
 ## Project Structure
 internship-assessment/
@@ -188,58 +160,64 @@ internship-assessment/
 ├── .gitignore # Git ignore rules
 └── README.md # This file
 
-text
 
 ## Known Limitations
 
-1. **Audio File Size**: Maximum file size is 10MB (approximately 5 minutes of audio) to prevent timeouts
-2. **Text-to-Speech Timeout**: The TTS API may timeout for very long texts or during high server load. The application handles this gracefully with error messages.
-3. **Supported Languages**: Translation is available only for the 5 supported Ugandan languages
-4. **Audio Formats**: Only WAV and MP3 formats are supported for audio input
-5. **API Rate Limits**: Subject to Sunbird AI API rate limits based on your account type
+1. **Audio file size**: Maximum 10MB per file (~5 minutes of audio). Larger files are rejected to prevent timeout errors.
+
+2. **Text-to-Speech reliability**: The TTS endpoint sometimes times out during high server load. This is a Sunbird API server issue, not a code bug. The app handles this gracefully with error messages.
+
+3. **Supported languages**: Translation only works for 5 Ugandan languages:
+   - Luganda (lug)
+   - Runyankole (nyn)
+   - Ateso (teo)
+   - Lugbara (lgg)
+   - Acholi (ach)
+
+4. **Audio formats**: Only WAV and MP3 files are supported for upload.
+
+5. **API rate limits**: Subject to Sunbird AI's free tier rate limits.
+
+6. **Summarization quality**: Summary quality depends on Sunbird's AI model - sometimes it may return the original text if summarization is unavailable.
+
+## Troubleshooting
+
+**Error: "Translation failed: 401"**  
+→ Your API token is missing or invalid. Check that `SUNBIRD_API_TOKEN` is correctly set in your `.env` file.
+
+**Error: "TTS timed out"**  
+→ Sunbird's TTS server is slow or overloaded. Try again with shorter text or wait a few minutes.
+
+**Error: "Audio file too large"**  
+→ Your audio file exceeds 10MB. Compress it or trim to under 5 minutes.
+
+**App won't start**  
+→ Make sure all dependencies are installed: `pip install -r requirements.txt`
+
+## Tech Stack
+
+- **Frontend/Backend**: Streamlit (Python web framework)
+- **AI Services**: Sunbird AI (all AI capabilities)
+- **Key Libraries**: 
+  - `streamlit` - Web interface
+  - `requests` - HTTP API calls
+  - `python-dotenv` - Environment configuration
+  - `base64` - Audio encoding/decoding
 
 ## Development
 
-### Running Tests
-
-The project includes unit tests for the programming exercises:
-
+**Run tests:**
 ```bash
 pytest
 ```
 
-All tests should pass before submission.
-
-### Code Structure
-
-- **`app.py`**: Main application with Streamlit UI and API integration
-- **`exercises/basics.py`**: Implementation of Collatz sequence and distinct numbers algorithms
-- **Error Handling**: Comprehensive try-catch blocks with user-friendly error messages and timeout handling
-
-## Troubleshooting
-
-**Issue**: "Translation failed: 422"
-- **Solution**: Ensure your API token is valid and properly set in `.env`
-
-**Issue**: "TTS timed out"
-- **Solution**: This is a server-side issue. Try with shorter text or try again later.
-
-**Issue**: "Audio file too large"
-- **Solution**: Trim your audio to under 5 minutes or compress the file.
-
-**Issue**: Streamlit won't start
-- **Solution**: Ensure all dependencies are installed: `pip install -r requirements.txt`
+All tests in `tests/test_basics.py` should pass.
 
 ## Credits
 
-- **APIs**: [Sunbird AI](https://sunbird.ai/)
-- **Framework**: [Streamlit](https://streamlit.io/)
-- **Developer**: Arinda Deogracious
-- **Internship Program**: Sunbird AI Internship Assessment 2026
-
-## License
-
-This project is part of the Sunbird AI internship assessment.
+**Builder**: Arinda Deogracious  
+**Purpose**: Sunbird AI Internship Assessment (May 2026)  
+**AI Provider**: [Sunbird AI](https://sunbird.ai/)  
 
 ---
 
